@@ -1,6 +1,6 @@
 import { Hero } from './hero';
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -10,10 +10,19 @@ export class HeroService {
 
     constructor(private http: Http) { }
 
+    private getHeaders(): RequestOptions {
+       let headers =  new Headers({ 'Authorization': 'Bearer ' +
+       'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGlfa2V5Ijo'+
+       'iUkY3MEY0eXlxWEV6ZE1na2xxS1FMQXR0IiwiZXhwIjoxNDkwNzE1N'+
+       'jkzLCJpc3MiOiJwcmF2ZWVuX3NlcnZlciIsImF1ZCI6InByYXZlZW5fY2'+
+       'xpZW50In0.p3CmtVQQPoJ9ELB7_6i17qGPOJhcEbjJIrnDUSWBTrU'});
+       return new RequestOptions({ headers: headers });
+    }
+
     getHeroes(): Promise<Hero[]> {
-      return this.http.get(this.heroesUrl+'todos')
+      return this.http.get(this.heroesUrl+'todos', this.getHeaders())
                  .toPromise()
-                 .then(response => JSON.parse(response._body) as Hero[])
+                 .then((response: Response) => response.json() as Hero[])
                  .catch(this.handleError);
     }
 
@@ -23,9 +32,9 @@ export class HeroService {
     }
 
     getHero(id: number): Promise<Hero> {
-      return this.http.get(this.heroesUrl+'todos/'+id)
+      return this.http.get(this.heroesUrl+'todos/'+id, this.getHeaders())
                .toPromise()
-               .then(response => JSON.parse(response._body) as Hero)
+               .then((response: Response) => response.json() as Hero)
                .catch(this.handleError);
     }
 }
