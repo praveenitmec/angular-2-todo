@@ -12,6 +12,7 @@ import { HeroService } from './hero.service';
 export class HeroesComponent implements OnInit {
   heroes: Hero[];
   selectedHero: Hero;
+  nameerror = 0;
 
   constructor(
     private router: Router,
@@ -29,13 +30,20 @@ export class HeroesComponent implements OnInit {
     this.selectedHero = hero;
   }
 
+  nameFocus(): void {
+    this.nameerror = 0;
+  }
+
   gotoDetail(): void {
     this.router.navigate(['/detail', this.selectedHero.id]);
   }
 
   add(name: string): void {
     name = name.trim();
-    if (!name) { return; }
+    if (!name) {
+      this.nameerror = 1;
+      return;
+    }
     this.heroService.addHero(name)
         .then(hero =>{
             this.heroes.push(hero);

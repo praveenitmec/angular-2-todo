@@ -1,6 +1,7 @@
 <h2>My Heroes</h2>
 <div>
-  <label>Hero name:</label> <input #heroName />
+  <label>Hero name:</label> <input (focus)="nameFocus()" #heroName />
+  <span *ngIf="nameerror == 1" style="color:red">Name cant be empty</span>
   <button (click)="add(heroName.value); heroName.value=''">
     Add
   </button>
